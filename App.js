@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Alert, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Alert, Modal, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Fontisto, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { theme } from './color';
@@ -45,7 +45,6 @@ export default function App() {
   const saveToDos = async (toSave) => {
     try {
       await AsyncStorage.setItem(STORAGE_TODOS_KEY, JSON.stringify(toSave));
-      console.log(toSave);
     }
     catch (e) {
       console.log(e);
@@ -75,24 +74,34 @@ export default function App() {
   };
 
   const deleteToDo = async (key) => {
-    Alert.alert(
-      "Delete To Do",
-      "Are you sure?",
-      [
-        { text: "Cancel" },
-        {
-          text: "Delete",
-          style: "destructive", // iOS Only
-          onPress: () => {
-            const newToDos = { ...toDos };
-            delete newToDos[key];
-            setToDos(newToDos);
-            saveToDos(newToDos);
-            console.log(newToDos);
+    if(Platform.OS === "web") {
+      const ok = confirm("Do you want to delete this To Do?")
+      if (ok) {
+        const newToDos = { ...toDos };
+        delete newToDos[key];
+        setToDos(newToDos);
+        saveToDos(newToDos);
+      }
+    }
+    else{
+      Alert.alert(
+        "Delete To Do",
+        "Are you sure?",
+        [
+          { text: "Cancel" },
+          {
+            text: "Delete",
+            style: "destructive", // iOS Only
+            onPress: () => {
+              const newToDos = { ...toDos };
+              delete newToDos[key];
+              setToDos(newToDos);
+              saveToDos(newToDos);
+            }
           }
-        }
-      ]
-    );
+        ]
+      );
+    }
   };
 
   const finishToDo = async (key, finish, finishDate) => {
@@ -120,7 +129,6 @@ export default function App() {
     if (editText === "") {
       return
     }
-    console.log(objectKey);
     const newToDos = { ...toDos[objectKey], text: editText, editing: false };
     const assignToDos = Object.assign({ ...toDos, [objectKey]: newToDos });
     setToDos(assignToDos);
