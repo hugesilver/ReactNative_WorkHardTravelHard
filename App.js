@@ -149,7 +149,7 @@ export default function App() {
         style={styles.input}
       />
       {
-        Object.keys(toDos).length !== 0 ?
+        !toDos || Object.keys(toDos).length !== 0 ?
           <ScrollView style={{ marginTop: 25 }}>
             {Object.keys(toDos).map(key => (
               toDos[key].working === working ? (
