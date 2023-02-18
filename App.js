@@ -139,7 +139,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <View style={styles.header}>
         <TouchableOpacity onPress={work}>
           <Text style={{ ...styles.btnText, color: working ? "white" : theme.grey }}>Work</Text>
