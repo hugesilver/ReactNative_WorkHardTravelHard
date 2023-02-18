@@ -188,10 +188,10 @@ export default function App() {
           </View>
       }
       <Modal
-        animationType="none"
+        animationType="fade"
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          setModalVisible(false);
         }}
         transparent={true}
       >
